@@ -57,7 +57,7 @@
         <form
           class="comment-form"
           method="post"
-          action="{{url_for('comment_add', news_id=news_obj.id)}}"
+          action="{{url_for('news_api.comment_add', news_id=news_obj.id)}}"
         >
           <div class="form-group">
             {{form.content}}

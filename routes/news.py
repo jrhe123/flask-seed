@@ -75,7 +75,7 @@ def comment_add(news_id):
             comment_obj.save()
             print("added comments")
             flash("comment has been added!", "success")
-            return redirect(url_for("detail", pk=news_id))
+            return redirect(url_for("news_api.detail", pk=news_id))
         else:
             print("error: ", form.errors)
             flash("invalid input", "danger")
