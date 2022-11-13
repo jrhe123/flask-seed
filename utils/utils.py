@@ -1,7 +1,9 @@
-from flask import abort, request, current_app, g
+from flask import abort, request, current_app, g, jsonify
 from functools import wraps
+import jwt
 
 
+# 1. api key example
 def require_appkey(f):
     @wraps(f)
     # the new, post-decoration function. Note *args and **kwargs here.
@@ -17,6 +19,7 @@ def require_appkey(f):
     return decorated_function
 
 
+# 2. token example
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -46,3 +49,30 @@ def admin_login_required(f):
         return f(*args, **kwargs)
 
     return wrap
+
+
+# 3. jwt example
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+
+        if "x-access-token" in request.headers:
+            token = request.headers["x-access-token"]
+
+        if not token:
+            return jsonify({"message": "Token is missing!"}), 401
+
+        try:
+            data = jwt.decode(token, current_app.config["SECRET_KEY"])
+            # current_user = User.query.filter_by(public_id=data["public_id"]).first()
+            current_user = {
+                "guid": "1001",
+                "username": "roytest",
+            }
+        except:
+            return jsonify({"message": "Token is invalid!"}), 401
+
+        return f(current_user, *args, **kwargs)
+
+    return decorated

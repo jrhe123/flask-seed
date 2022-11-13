@@ -1,7 +1,21 @@
-import json
-from flask import Flask, abort, json, request, g, Response, jsonify
+import json, jwt
+from flask import (
+    Flask,
+    abort,
+    json,
+    request,
+    g,
+    Response,
+    jsonify,
+)
 from werkzeug.exceptions import HTTPException
 from utils.utils import require_appkey, login_required, admin_login_required
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+from flask_cors import CORS
+
+# upload path
+UPLOAD_FOLDER = "uploads"
 
 # services
 from services.log_service import LogService
@@ -12,6 +26,7 @@ from models.models import db, mongodb
 # routes
 from routes.news import news_api
 from routes.admin import admin_api
+from routes.upload import upload_api
 
 # common
 from common.response import CustomResponse
@@ -19,6 +34,16 @@ from common.response import CustomResponse
 # init app
 app = Flask(__name__)
 app.config.from_object("config.Config")
+app.add_url_rule(
+    "/uploads/<name>",
+    endpoint="download_file",
+    build_only=True,
+)
+# cors
+CORS(app)
+# upload setup
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config["MAX_CONTENT_LENGTH"] = 16 * 1000 * 1000
 # mongodb
 mongodb.init_app(app=app)
 # mysql
@@ -27,6 +52,7 @@ db.init_app(app=app)
 # routes
 app.register_blueprint(news_api)
 app.register_blueprint(admin_api)
+app.register_blueprint(upload_api)
 
 # api response handle class
 app.response_class = CustomResponse
@@ -64,7 +90,7 @@ def before_request_func():
             request_content = request.form.to_dict()
         else:
             request_content = request.json
-
+    # todo: change to async
     log_service = LogService()
     log_res = log_service.add_one(
         method,
@@ -81,6 +107,7 @@ def before_request_func():
 def after_request_func(response: Response):
     status_code = response.status
     g.status = status_code
+    # todo: change to async
     log_service = LogService()
     log_service.update_one(
         g.log_id,
@@ -129,3 +156,41 @@ def test_decorator():
 @app.route("/users", methods=["GET", "POST", "PATCH", "PUT", "DELETE"])
 def users():
     return {"message": "ok"}
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    data = {
+        "username": "roytest",
+        "password": "123456",
+    }
+    hashed_password = generate_password_hash(
+        data["password"],
+        method="sha256",
+    )
+    return {"message": "ok"}
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    auth = {
+        "username": "roytest",
+        "password": "admasmcskamckamcksamk",
+    }
+    # from db
+    user_obj = {
+        "guid": "1001",
+        "username": "roytest",
+        "password": "admasmcskamckamcksamk",
+    }
+    if check_password_hash(user_obj.password, auth.password):
+        token = jwt.encode(
+            {
+                "public_id": user_obj.guid,
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
+            },
+            app.config["SECRET_KEY"],
+        )
+        return jsonify({"token": token.decode("UTF-8")})
+    else:
+        return {"message": "error"}
