@@ -17,3 +17,8 @@ http://localhost:5000/simple_start_task
 http://localhost:5000/simple_task_status/78bbe7bc-deeb-4958-b029-58e59c2de7ca
 http://localhost:5000/simple_task_result/78bbe7bc-deeb-4958-b029-58e59c2de7ca
 
+
+docker setup:
+1. mysql: 33066 -> 3306 (create schema & migrate tables)
+2. redis: 6380 -> 6379
+3. mongo: 27017 -> 27017
