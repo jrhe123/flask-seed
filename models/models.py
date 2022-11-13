@@ -99,13 +99,13 @@ class Comments(mongodb.Document):
 
 
 class Log(mongodb.Document):
-    object_id = IntField(required=True, verbose_name="log id")
+    log_id = StringField(required=True, verbose_name="log id")
     method = StringField(required=True, max_length=10)
     url = StringField(required=True, max_length=255)
     headers = StringField()
     request = StringField()
     response = StringField()
-    status_code = IntField()
+    status_code = StringField()
     elapse_time = IntField()
     created_at = DateTimeField(default=datetime.now())
     updated_at = DateTimeField(default=datetime.now())
@@ -116,4 +116,4 @@ class Log(mongodb.Document):
     }
 
     def __str__(self):
-        return f"Logs: {self.object_id}"
+        return f"Logs: {self.created_at} {self.url}"

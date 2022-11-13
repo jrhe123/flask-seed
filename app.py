@@ -1,6 +1,10 @@
-from flask import Flask, abort, json, request, g, Response
+import json
+from flask import Flask, abort, json, request, g, Response, jsonify
 from werkzeug.exceptions import HTTPException
 from utils.utils import require_appkey, login_required, admin_login_required
+
+# services
+from services.log_service import LogService
 
 # databases
 from models.models import db, mongodb
@@ -24,10 +28,10 @@ db.init_app(app=app)
 app.register_blueprint(news_api)
 app.register_blueprint(admin_api)
 
-# api response
+# api response handle class
 app.response_class = CustomResponse
 
-# error handler
+# api error handler
 @app.errorhandler(HTTPException)
 def handle_exception(e):
     """Return JSON instead of HTML for HTTP errors."""
@@ -48,23 +52,41 @@ def handle_exception(e):
     return response
 
 
-# capture api logging
+# capture api logging to mongodb
 @app.before_request
 def before_request_func():
-    g.method = request.method
-    g.url = request.url
-    print("!!!!!!!! before_request_func")
-    print("!!!!!!!!", request.method)
-    print("!!!!!!!!", request.url)
+    method = request.method
+    url = request.url
+    headers_content = request.headers
+    request_content = request.args.to_dict()
+    if method != "GET":
+        if "multipart/form-data" in headers_content["Content-Type"]:
+            request_content = request.form.to_dict()
+        else:
+            request_content = request.json
+
+    log_service = LogService()
+    log_res = log_service.add_one(
+        method,
+        url,
+        ";".join(str(a) for a in headers_content.values()),
+        json.dumps(request_content),
+    )
+    g.method = method
+    g.url = url
+    g.log_id = log_res["log_id"]
 
 
 @app.after_request
 def after_request_func(response: Response):
-    g.status = response.status
-    # logger.info(f"method: {g.method}\n url: {g.url}\n status: {g.status}")
-    print("+++++++ after_request_func")
-    print("+++++++", response.status)
-    print("+++++++", response)
+    status_code = response.status
+    g.status = status_code
+    log_service = LogService()
+    log_service.update_one(
+        g.log_id,
+        json.dumps(response.get_json()),
+        status_code,
+    )
     return response
 
 
@@ -96,15 +118,14 @@ def hello():
     }
 
 
-@app.route("/users", methods=["GET", "POST"])
+@app.route("/test_decorator", methods=["GET", "POST"])
 @require_appkey
 @login_required
 @admin_login_required
-def hello():
-    return {
-        "status": 200,
-        "message": "custom_message",
-        "error": "error_message",
-        "trace": "trace_message",
-        "data": "input_data",
-    }
+def test_decorator():
+    return {"message": "ok"}
+
+
+@app.route("/users", methods=["GET", "POST", "PATCH", "PUT", "DELETE"])
+def users():
+    return {"message": "ok"}
