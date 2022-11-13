@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" />
+    <title>admin</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <!--  -->
+      {% for category, message in get_flashed_messages(with_categories=True) %}
+      <div class="alert alert-{{ category }}">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {{ message }}
+      </div>
+      {% endfor %}
+      <!--  -->
+      <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button
+              type="button"
+              class="navbar-toggle collapsed"
+              data-toggle="collapse"
+              data-target="#bs-example-navbar-collapse-1"
+            >
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/admin/index.html">Admin</a>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div
+            class="collapse navbar-collapse"
+            id="bs-example-navbar-collapse-1"
+          >
+            <ul class="nav navbar-nav">
+              <li class="active">
+                <a href="/admin/add.html">
+                  <i class="glyphicon glyphicon-plus"></i> News
+                </a>
+              </li>
+            </ul>
+            <form
+              class="navbar-form navbar-left"
+              role="search"
+              action="/admin/index.html"
+            >
+              <div class="form-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="search by"
+                  name="title"
+                  value=""
+                />
+              </div>
+              <button type="submit" class="btn btn-default">Search</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#">about us</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                  >Settings <span class="caret"></span
+                ></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Profile</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#">Password</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#">Signout</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+      </nav>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="list-group">
+            <a href="/" class="list-group-item active"> Home </a>
+            <a href="/admin/index.html" class="list-group-item">NEWS</a>
+            <a href="/admin/add.html" class="list-group-item">Add NEWS</a>
+            <a href="/admin/comments.html" class="list-group-item">Comments</a>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Published</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in page_data.items %}
+              <tr>
+                <td>{{item.id}}</td>
+                <td>{{item.title}}</td>
+                <td>{{item.news_type}}</td>
+                <td>{{item.created_at}}</td>
+                <td>
+                  <a class="btn btn-info" href="/admin/news/update/{{item.id}}"
+                    >Edit</a
+                  >
+                  <a
+                    class="btn btn-danger"
+                    data-url="/admin/news/delete/{{item.id}}"
+                    href="javscript:;"
+                    >Delete</a
+                  >
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <nav>
+            <span
+              >total pages: {{page_data.pages}}, records:
+              {{page_data.total}}</span
+            >
+            <ul class="pagination">
+              <!-- prev -->
+
+              {% if page_data.has_prev %}
+              <li><a href="/admin/{{page_data.prev_num}}">&raquo;</a></li>
+              {% else %}
+              <li class="disabled"><a href="javscript:;">&raquo;</a></li>
+              {% endif %}
+
+              <!-- loop page -->
+              {% for page in page_data.iter_pages() %}
+              <!-- active -->
+              {% if page == page_data.page %}
+              <li class="active"><a href="javscript:;">{{page}}</a></li>
+              {% else %}
+              <li><a href="/admin/{{page}}">{{page}}</a></li>
+              {% endif %}
+              <!-- end of active -->
+              {% endfor %}
+
+              <!-- next -->
+              {% if page_data.has_next %}
+              <li><a href="/admin/{{page_data.next_num}}">&raquo;</a></li>
+              {% else %}
+              <li class="disabled"><a href="javscript:;">&raquo;</a></li>
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <script src="/static/jquery.1.10.2.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+
+    <script>
+      $(function () {
+        $(".btn-danger").on("click", function () {
+          var btn = $(this);
+
+          if (confirm("Are you sure delete?")) {
+            $.post(btn.attr("data-url"), function (data) {
+              if (data === "yes") {
+                btn.parents("tr").hide();
+              } else {
+                alert("error");
+              }
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="stylesheet" href="/static/css/index.css" />
+    <title>Flask</title>
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/cat/local">Local</a></li>
+          <li><a href="/cat/global">Global</a></li>
+          <li><a href="/cat/entertainment">Entertaiment</a></li>
+          <li><a href="/cat/miltary">Miltary</a></li>
+        </ul>
+      </nav>
+    </header>
+    <article>
+      {% for item in news_list %}
+      <div class="list-news">
+        <div class="img-content">
+          <img src="{{ item.img_url }}" alt="image" />
+        </div>
+        <div class="right-content">
+          <p><a href="/detail/{{ item.id }}">{{ item.title }}</a></p>
+          <small>{{ item.created_at }}</small>
+        </div>
+      </div>
+      {% endfor %}
+    </article>
+  </body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" />
+    <title>Update NEWS</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <!--  -->
+      {% for category, message in get_flashed_messages(with_categories=True) %}
+      <div class="alert alert-{{ category }}">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {{ message }}
+      </div>
+      {% endfor %}
+      <!--  -->
+      <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button
+              type="button"
+              class="navbar-toggle collapsed"
+              data-toggle="collapse"
+              data-target="#bs-example-navbar-collapse-1"
+            >
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/admin/index.html">Admin</a>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div
+            class="collapse navbar-collapse"
+            id="bs-example-navbar-collapse-1"
+          >
+            <ul class="nav navbar-nav">
+              <li class="active">
+                <a href="/admin/add.html">
+                  <i class="glyphicon glyphicon-plus"></i> News
+                </a>
+              </li>
+            </ul>
+            <form class="navbar-form navbar-left" role="search">
+              <div class="form-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="search by"
+                  name="title"
+                  value=""
+                />
+              </div>
+              <button type="submit" class="btn btn-default">Search</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#">about us</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                  >Settings <span class="caret"></span
+                ></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Profile</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#">Password</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#">Signout</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+      </nav>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="list-group">
+            <a href="/" class="list-group-item active"> Home </a>
+            <a href="/admin/index.html" class="list-group-item">NEWS</a>
+            <a href="/admin/add.html" class="list-group-item">Add NEWS</a>
+            <a href="/admin/comments.html" class="list-group-item">Comments</a>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <form class="form-horizontal" role="form" method="post">
+            <div class="form-group">
+              <label class="col-sm-2 control-label"
+                >{{ form.title.label.text }}</label
+              >
+              <div class="col-sm-10">
+                {{ form.title }}
+                <!--  -->
+                {% if form.title.errors %}
+                <span class="text-danger"> {{ form.title.errors[0] }} </span>
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label"
+                >{{ form.content.label.text }}</label
+              >
+              <div class="col-sm-10">
+                {{ form.content }}
+                <!--  -->
+                {% if form.content.errors %}
+                <span class="text-danger"> {{ form.content.errors[0] }} </span>
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label"
+                >{{ form.news_type.label.text }}</label
+              >
+              <div class="col-sm-10">{{ form.news_type }}</div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label"
+                >{{ form.img_url.label.text }}</label
+              >
+              <div class="col-sm-10">{{ form.img_url }}</div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label"
+                >{{ form.is_top.label.text }}</label
+              >
+              <div class="col-sm-10">
+                <div class="checkbox">
+                  <label> {{ form.is_top }} Home page </label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                {{ form.csrf_token }} {{ form.submit }}
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="/static/jquery.1.10.2.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+  </body>
+</html>

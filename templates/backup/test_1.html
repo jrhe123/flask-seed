@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>pass variables</h1>
+    <b>username: {{username}}</b>
+    <p>age: {{age}}</p>
+    <hr />
+    <b>username: {{user_obj.username}}</b>
+    <p>age: {{user_obj.age}}</p>
+    <hr />
+    <h1>loop</h1>
+    {% for key, value in user_obj.items() %}
+    <p>{{key}} : {{value}}</p>
+    {% endfor %}
+    <hr />
+    {% for item in city_tuple %}
+    <p>{{loop.index}} : {{item}} : {{loop.first}} : {{loop.length}}</p>
+    {% endfor %}
+    <p></p>
+    <hr />
+    {# this is a comment #}
+    <h1>if else</h1>
+    <p>scrore: {{score}}</p>
+    {% if score > 80 %}
+    <p>score > 80</p>
+    {% else %}
+    <p>score <= 80</p>
+    {% endif %}
+    <br />
+    {% if abc is undefined %}
+    <p>abc is undefined</p>
+    {% endif %}
+    <hr />
+    <h1>with & set</h1>
+    {% with %} {% set value = 99 %}
+    <p>this is value: {{value}}</p>
+    {% endwith %}
+    <hr />
+    <h1>filters</h1>
+    <p>phone filter: {{phone_number|phone_format}}</p>
+    <p>defautl filter: {{abc|default("no value")}}</p>
+    <p>name filter: {{username|striptags|title}}</p>
+    <hr />
+  </body>
+</html>

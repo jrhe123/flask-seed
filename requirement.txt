@@ -1,0 +1,14 @@
+Flask
+Flask-WTF
+python-dotenv
+
+pymysql
+mysqlclient
+sqlalchemy
+Flask-SQLAlchemy
+
+pymongo
+mongoengine
+flask-mongoengine
+
+redis
