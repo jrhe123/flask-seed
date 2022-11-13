@@ -8,11 +8,13 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = os.environ.get("MYSQL_DATABASE_URI")
     MONGODB_SETTINGS = {
         "db": "flask_seed",
+        "host": "mongo-container",
+        "port": 27017,
         "username": "root",
         "password": "root",
     }
     REDIS_SETTINGS = {
-        "host": "localhost",
+        "host": "redis",
         "password": "",
         "port": 6379,
         "db": 1,  # 0-15, choose one of them

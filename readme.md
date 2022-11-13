@@ -5,3 +5,15 @@
 3. export FLASK_DEBUG=1
 
 flask run --port=5000
+
+
+### celery - background job (with redis)
+doc: https://github.com/soumilshah1995/Python-Flask-Redis-Celery-Docker/blob/main/Part1/flask_app/app.py
+
+1. cd simplez_worker
+2. celery -A tasks worker --loglevel=info
+3. test
+http://localhost:5000/simple_start_task
+http://localhost:5000/simple_task_status/78bbe7bc-deeb-4958-b029-58e59c2de7ca
+http://localhost:5000/simple_task_result/78bbe7bc-deeb-4958-b029-58e59c2de7ca
+

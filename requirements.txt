@@ -1,17 +1,19 @@
+# basic
 Flask
 Flask-WTF
 python-dotenv
 Werkzeug
 jwt
 Flask-Cors
-
+celery[redis]
+# mysql
 pymysql
 mysqlclient
 sqlalchemy
 Flask-SQLAlchemy
-
+# mongo
 pymongo
 mongoengine
 flask-mongoengine
-
+# redis
 redis

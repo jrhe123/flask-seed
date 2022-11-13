@@ -13,6 +13,7 @@ from utils.utils import require_appkey, login_required, admin_login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_cors import CORS
+from celery import Celery
 
 # upload path
 UPLOAD_FOLDER = "uploads"
@@ -38,6 +39,12 @@ app.add_url_rule(
     "/uploads/<name>",
     endpoint="download_file",
     build_only=True,
+)
+# celery delay job
+simple_app = Celery(
+    "simple_worker",
+    broker="redis://redis:6379/0",
+    backend="redis://redis:6379/0",
 )
 # cors
 CORS(app)
@@ -117,10 +124,33 @@ def after_request_func(response: Response):
     return response
 
 
-# @app.route("/migrate_table", methods=["GET"])
-# def migrate_table():
-#     db.create_all()
-#     return {"msg": "ok"}
+@app.route("/migrate_table", methods=["GET"])
+def migrate_table():
+    db.create_all()
+    return {"msg": "ok"}
+
+
+# test celery delay job
+@app.route("/simple_start_task")
+def call_method():
+    app.logger.info("Invoking Method ")
+    # queue name in task folder.function name
+    r = simple_app.send_task("tasks.longtime_add", kwargs={"x": 1, "y": 2})
+    app.logger.info(r.backend)
+    return r.id
+
+
+@app.route("/simple_task_status/<task_id>")
+def get_status(task_id):
+    status = simple_app.AsyncResult(task_id, app=simple_app)
+    print("Invoking Method ")
+    return "Status of the Task " + str(status.state)
+
+
+@app.route("/simple_task_result/<task_id>")
+def task_result(task_id):
+    result = simple_app.AsyncResult(task_id).result
+    return "Result of the Task " + str(result)
 
 
 @app.route("/test1")

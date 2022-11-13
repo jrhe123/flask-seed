@@ -11,7 +11,8 @@ from config import DevelopmentConfig
 
 class MongoDBTest(object):
     def __init__(self):
-        self.cluster = MongoClient("mongodb://root:root@localhost:27017")
+        # self.cluster = MongoClient("mongodb://root:root@localhost:27017")
+        self.cluster = MongoClient("mongodb://root:root@mongo-container:27017")
 
     def add_one(self):
         doc = {
