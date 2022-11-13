@@ -21,6 +21,8 @@ class Config(object):
     }
     # redis cache key
     INDEX_NEWS_KEY = "INDEX_NEWS_KEY"
+    # api key
+    API_KEY = os.environ.get("API_KEY")
 
 
 class ProductionConfig(Config):
