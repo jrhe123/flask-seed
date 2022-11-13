@@ -7,7 +7,7 @@
 flask run --port=5000
 
 
-### celery - background job (with redis)
+### Celery - background job (with redis)
 doc: https://github.com/soumilshah1995/Python-Flask-Redis-Celery-Docker/blob/main/Part1/flask_app/app.py
 
 1. cd simplez_worker
