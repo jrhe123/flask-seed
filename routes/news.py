@@ -1,8 +1,10 @@
 from flask import Blueprint, render_template, abort, request, flash, redirect, url_for
 
-from cache import NewsCache
-from models import News, Comments
-from forms import CommentForm
+from redis_cache import NewsCache
+from models.models import News, Comments
+from forms.forms import CommentForm
+
+from utils.utils import require_appkey
 
 news_api = Blueprint("news_api", __name__)
 

@@ -96,3 +96,24 @@ class Comments(mongodb.Document):
 
     def __str__(self):
         return f"Comments: {self.content}"
+
+
+class Log(mongodb.Document):
+    object_id = IntField(required=True, verbose_name="log id")
+    method = StringField(required=True, max_length=10)
+    url = StringField(required=True, max_length=255)
+    headers = StringField()
+    request = StringField()
+    response = StringField()
+    status_code = IntField()
+    elapse_time = IntField()
+    created_at = DateTimeField(default=datetime.now())
+    updated_at = DateTimeField(default=datetime.now())
+
+    meta = {
+        "collection": "logs",
+        "ordering": ["-created_at"],
+    }
+
+    def __str__(self):
+        return f"Logs: {self.object_id}"

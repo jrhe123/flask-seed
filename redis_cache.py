@@ -2,7 +2,7 @@ import redis, json
 from flask import current_app
 from datetime import datetime
 
-from models import News
+from models.models import News
 
 
 class BaseRedisConnection(object):

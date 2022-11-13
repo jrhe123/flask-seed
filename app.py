@@ -1,9 +1,9 @@
 from flask import Flask, abort, json, request, g, Response
 from werkzeug.exceptions import HTTPException
-from functools import wraps
+from utils.utils import require_appkey, login_required, admin_login_required
 
 # databases
-from models import db, mongodb
+from models.models import db, mongodb
 
 # routes
 from routes.news import news_api
@@ -48,37 +48,21 @@ def handle_exception(e):
     return response
 
 
-# The actual decorator function
-def require_appkey(view_function):
-    @wraps(view_function)
-    # the new, post-decoration function. Note *args and **kwargs here.
-    def decorated_function(*args, **kwargs):
-        if (
-            request.headers.get("api-key")
-            and request.headers.get("api-key") == app.config["API_KEY"]
-        ):
-            return view_function(*args, **kwargs)
-        else:
-            abort(401, "api key is required")
-
-    return decorated_function
-
-
 # capture api logging
 @app.before_request
-def gather_request_data():
+def before_request_func():
     g.method = request.method
     g.url = request.url
-    print("!!!!!!!! gather_request_data")
+    print("!!!!!!!! before_request_func")
     print("!!!!!!!!", request.method)
     print("!!!!!!!!", request.url)
 
 
 @app.after_request
-def log_details(response: Response):
+def after_request_func(response: Response):
     g.status = response.status
     # logger.info(f"method: {g.method}\n url: {g.url}\n status: {g.status}")
-    print("+++++++ log_details")
+    print("+++++++ after_request_func")
     print("+++++++", response.status)
     print("+++++++", response)
     return response
@@ -102,6 +86,20 @@ def test2():
 
 @app.route("/hello", methods=["GET", "POST"])
 @require_appkey
+def hello():
+    return {
+        "status": 200,
+        "message": "custom_message",
+        "error": "error_message",
+        "trace": "trace_message",
+        "data": "input_data",
+    }
+
+
+@app.route("/users", methods=["GET", "POST"])
+@require_appkey
+@login_required
+@admin_login_required
 def hello():
     return {
         "status": 200,

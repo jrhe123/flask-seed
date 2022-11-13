@@ -8,9 +8,9 @@ from flask import (
 )
 from datetime import datetime
 
-from cache import NewsCache
-from forms import NewsForm
-from models import db, News, Comments
+from redis_cache import NewsCache
+from forms.forms import NewsForm
+from models.models import db, News, Comments
 
 admin_api = Blueprint("admin_api", __name__)
 
