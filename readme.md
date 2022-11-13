@@ -12,10 +12,10 @@ doc: https://github.com/soumilshah1995/Python-Flask-Redis-Celery-Docker/blob/mai
 
 1. cd simplez_worker
 2. celery -A tasks worker --loglevel=info
-3. test
-http://localhost:5000/simple_start_task
-http://localhost:5000/simple_task_status/78bbe7bc-deeb-4958-b029-58e59c2de7ca
-http://localhost:5000/simple_task_result/78bbe7bc-deeb-4958-b029-58e59c2de7ca
+3. test calls
+4. http://localhost:5000/simple_start_task
+5. http://localhost:5000/simple_task_status/78bbe7bc-deeb-4958-b029-58e59c2de7ca
+6. http://localhost:5000/simple_task_result/78bbe7bc-deeb-4958-b029-58e59c2de7ca
 
 
 ### Docker setup:
