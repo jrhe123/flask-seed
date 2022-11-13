@@ -8,8 +8,8 @@ flask run --port=5000
 
 
 ### Celery - background job (with redis)
-doc: https://github.com/soumilshah1995/Python-Flask-Redis-Celery-Docker/blob/main/Part1/flask_app/app.py
 
+0. reference doc: https://github.com/soumilshah1995/Python-Flask-Redis-Celery-Docker/blob/main/Part1/flask_app/app.py
 1. cd simplez_worker
 2. celery -A tasks worker --loglevel=info
 3. test calls
@@ -19,6 +19,7 @@ doc: https://github.com/soumilshah1995/Python-Flask-Redis-Celery-Docker/blob/mai
 
 
 ### Docker setup:
+
 1. mysql: 33066 -> 3306 (create schema & migrate tables)
 2. redis: 6380 -> 6379
 3. mongo: 27017 -> 27017
