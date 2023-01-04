@@ -14,6 +14,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_cors import CORS
 from celery import Celery
+import os
 
 # upload path
 UPLOAD_FOLDER = "uploads"
@@ -86,42 +87,42 @@ def handle_exception(e):
 
 
 # capture api logging to mongodb
-@app.before_request
-def before_request_func():
-    method = request.method
-    url = request.url
-    headers_content = request.headers
-    request_content = request.args.to_dict()
-    if method != "GET":
-        if "multipart/form-data" in headers_content["Content-Type"]:
-            request_content = request.form.to_dict()
-        else:
-            request_content = request.json
-    # todo: change to async
-    log_service = LogService()
-    log_res = log_service.add_one(
-        method,
-        url,
-        ";".join(str(a) for a in headers_content.values()),
-        json.dumps(request_content),
-    )
-    g.method = method
-    g.url = url
-    g.log_id = log_res["log_id"]
+# @app.before_request
+# def before_request_func():
+#     method = request.method
+#     url = request.url
+#     headers_content = request.headers
+#     request_content = request.args.to_dict()
+#     if method != "GET":
+#         if "multipart/form-data" in headers_content["Content-Type"]:
+#             request_content = request.form.to_dict()
+#         else:
+#             request_content = request.json
+#     # todo: change to async
+#     log_service = LogService()
+#     log_res = log_service.add_one(
+#         method,
+#         url,
+#         ";".join(str(a) for a in headers_content.values()),
+#         json.dumps(request_content),
+#     )
+#     g.method = method
+#     g.url = url
+#     g.log_id = log_res["log_id"]
 
 
-@app.after_request
-def after_request_func(response: Response):
-    status_code = response.status
-    g.status = status_code
-    # todo: change to async
-    log_service = LogService()
-    log_service.update_one(
-        g.log_id,
-        json.dumps(response.get_json()),
-        status_code,
-    )
-    return response
+# @app.after_request
+# def after_request_func(response: Response):
+#     status_code = response.status
+#     g.status = status_code
+#     # todo: change to async
+#     log_service = LogService()
+#     log_service.update_one(
+#         g.log_id,
+#         json.dumps(response.get_json()),
+#         status_code,
+#     )
+#     return response
 
 
 @app.route("/migrate_table", methods=["GET"])
@@ -185,7 +186,22 @@ def test_decorator():
 
 @app.route("/users", methods=["GET", "POST", "PATCH", "PUT", "DELETE"])
 def users():
-    return {"message": "ok"}
+    # Creating a child process using fork() method
+    val = os.fork()
+
+    # Testing the values returned by fork() method
+    if val == 0:
+        pid = os.getpid()
+        print(f"Hi I am Child Process and my PID is {pid}.")
+    elif val > 0:
+        pid = os.getpid()
+        print(
+            f"Hi I am Parent Process and my PID is {pid} and PID {val} is my Child Process."
+        )
+    else:
+        print("Sorry!! Child Process creation has failed...")
+
+    return {"message": "321"}
 
 
 @app.route("/register", methods=["GET", "POST"])

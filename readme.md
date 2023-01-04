@@ -18,6 +18,10 @@ flask run --port=5000
 6. http://localhost:5000/simple_task_result/78bbe7bc-deeb-4958-b029-58e59c2de7ca
 
 
+### How to interact with long running child processes
+https://eli.thegreenplace.net/2017/interacting-with-a-long-running-child-process-in-python/
+
+
 ### Docker setup:
 
 1. mysql: 33066 -> 3306 (create schema & migrate tables)
