@@ -2,6 +2,7 @@
 
 db.students.find({})
 
+```
 db.students.findOne(
   {
     age: {
@@ -16,15 +17,18 @@ db.students.findOne(
     "_id": 0,
   }
 )
+```
 
 
 2. filter
+```
 {
   age: {
     $gte: 12,
     $lte: 18,
   },
 },
+```
 
 { age: null },
 
@@ -34,21 +38,23 @@ db.students.findOne(
 
 ========
 
-$eq
-$ne
-$gt
-$gte
-$lt
-$lte
-$in
-$nin
+- $eq
+- $ne
+- $gt
+- $gte
+- $lt
+- $lte
+- $in
+- $nin
 
+```
 {
   $or: [
     {sex: "male", age:{$gt: 12}},
     {sex: "female", age:{$lt: 18}},
   ]
 },
+```
 
 ========
 
@@ -69,6 +75,7 @@ regex
 
 ========
 
+```
 db.grades.find({
   "grade.course_name": "cs"
 })
@@ -81,6 +88,7 @@ db.grades.find({
     },
   ]
 })
+```
 
 embed search
 
@@ -90,11 +98,13 @@ $all
 $elemMatch
 $size
 
+```
 db.students.find({
   grades: {
     $size: 2
   }
 })
+```
 
 embed search array
 
@@ -109,9 +119,9 @@ distinct
 
 
 
-
 3. aggregate
 
+```
 db.students.aggregate(
   [
     <!-- where -->
@@ -133,6 +143,7 @@ db.students.aggregate(
     }
   ]
 )
+```
 
 ========
 
@@ -145,6 +156,7 @@ $max
 $first
 $last
 
+```
 db.grades.aggregate(
   [
     <!-- where -->
@@ -170,7 +182,9 @@ db.grades.aggregate(
     }
   ]
 )
+```
 
+```
 db.grades.aggregate(
   [
     <!-- where -->
@@ -190,7 +204,9 @@ db.grades.aggregate(
     }
   ]
 )
+```
 
+```
 db.grades.aggregate(
   [
     <!-- group by -->
@@ -202,7 +218,9 @@ db.grades.aggregate(
     }
   ]
 )
+```
 
+```
 db.grades.aggregate(
   [
     <!-- group by -->
@@ -217,7 +235,9 @@ db.grades.aggregate(
     }
   ]
 )
+```
 
+```
 db.grades.aggregate(
   [
     <!-- where -->
@@ -245,12 +265,14 @@ db.grades.aggregate(
     }
   ]
 )
+```
 
 4. Pagination
 
 
 descending
 
+```
 db.grades.find({
   "grade.course_name": "cs"
 }).sort({
@@ -259,47 +281,49 @@ db.grades.find({
 })
 
 db.grades.find({}).skip(20).limit(10)
+```
 
 
 5. advanced search keyword:
 
-aggregate
-search
-compound
-must
-text
-query
-fuzzy
-maxEdit
-should
-autocomplete
-path
-minimumShouldMatch
-range
-filter
-skip
-limit
-type
-searchAnalyzer
-analyzer
-lucene.keyword
+- aggregate
+- search
+- compound
+- must
+- text
+- query
+- fuzzy
+- maxEdit
+- should
+- autocomplete
+- path
+- minimumShouldMatch
+- range
+- filter
+- skip
+- limit
+- type
+- searchAnalyzer
+- analyzer
+- lucene.keyword
 
 
 6. update
 
-updateOne()
-replaceOne()
-updateMany()
+- updateOne()
+- replaceOne()
+- updateMany()
 
-$set
-$unset
-$currentDate
-$inc
-$min
-$max
-$mul
-$rename
+- $set
+- $unset
+- $currentDate
+- $inc
+- $min
+- $max
+- $mul
+- $rename
 
+```
 db.students.updateMany(
   {},
   {
@@ -327,6 +351,7 @@ db.students.updateMany(
     }
   }
 )
+```
 
 
 7. delete
